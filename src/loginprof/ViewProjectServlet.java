@@ -2,6 +2,7 @@ package loginprof;
 
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -49,12 +50,29 @@ public class ViewProjectServlet extends HttpServlet {
 		ResultSet rs=null;
 		try{
 			connection=getConnection();
-			PreparedStatement pstmt= connection.prepareStatement("select * from student natural join applied,project natural join floats where applied.project_id=project.project_id and prof_id=? order by project.project_id;");
+			PreparedStatement pstmt= connection.prepareStatement("select * from project natural join floats where prof_id=? order by project.project_id;");
 			pstmt.setString(1, userName);
 			rs= pstmt.executeQuery();
 			
 		} catch(SQLException sqle){
-			System.out.println("SQL exception when getting top 5 list");
+			System.out.println("SQL exception when getting project list");
+		} finally{
+			closeConnection(connection);
+		}
+		return rs;
+	}
+	public static ResultSet getProjects(String userName)
+	{
+		Connection connection=null;
+		ResultSet rs=null;
+		try{
+			connection=getConnection();
+			PreparedStatement pstmt= connection.prepareStatement("select * from project natural join floats where prof_id=? order by project.project_id;");
+			pstmt.setString(1, userName);
+			rs= pstmt.executeQuery();
+			
+		} catch(SQLException sqle){
+			System.out.println("SQL exception when getting project list");
 		} finally{
 			closeConnection(connection);
 		}
@@ -63,14 +81,16 @@ public class ViewProjectServlet extends HttpServlet {
 	public static boolean checkHard(String project_id,String student_id)
 	{
 		Connection connection=null;
-		boolean res = false;
+		boolean res = true;
 		try{
 			connection=getConnection();
-			PreparedStatement pstmt= connection.prepareStatement("select course_id as C from prerequisite where prerequisite.project_id=? and not exists ( select * from takes where takes.student_id=? and takes.course_id=prerequisite.course_id);");
+			PreparedStatement pstmt= connection.prepareStatement("select course_id as C from prerequisite where prerequisite.project_id=? and prerequisite.type='Hard' and not exists ( select * from takes where takes.student_id=? and takes.course_id=prerequisite.course_id);");
 			pstmt.setString(1, project_id);
 			pstmt.setString(2, student_id);
 			ResultSet rs= pstmt.executeQuery();
-			
+			while (rs.next()){
+				res=false;
+			}
 		} catch(SQLException sqle){
 			System.out.println("SQL exception when getting hard");
 		} finally{
@@ -81,15 +101,19 @@ public class ViewProjectServlet extends HttpServlet {
 	public static boolean checkSoft(String project_id,String student_id)
 	{
 		Connection connection=null;
-		boolean res = false;
+		boolean res = true;
 		try{
 			connection=getConnection();
-			PreparedStatement pstmt= connection.prepareStatement("select * from student natural join applied,project natural join floats where applied.project_id=project.project_id and prof_id=? order by project.project_id;");
-			pstmt.setString(1, userName);
-			rs= pstmt.executeQuery();
+			PreparedStatement pstmt= connection.prepareStatement("select course_id as C from prerequisite where prerequisite.project_id=? and prerequisite.type='Soft' and not exists ( select * from takes where takes.student_id=? and takes.course_id=prerequisite.course_id);");
+			pstmt.setString(1, project_id);
+			pstmt.setString(2, student_id);
+			ResultSet rs= pstmt.executeQuery();
+			while (rs.next()){
+				res=false;
+			}
 			
 		} catch(SQLException sqle){
-			System.out.println("SQL exception when getting top 5 list");
+			System.out.println("SQL exception when getting soft");
 		} finally{
 			closeConnection(connection);
 		}

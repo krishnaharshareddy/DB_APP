@@ -1,5 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=US-ASCII"
     pageEncoding="US-ASCII"%>
+<%@ page import="java.util.*" %>
+<%@ page import="java.sql.*" %>
+<%@ page import="loginprof.ViewProjectServlet" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <html>
@@ -70,6 +73,27 @@
 						<!-- Post -->
 							<article class="box post">
 								<!-- Needs to have which project are published and their corresponding SOP -->
+								<%
+								ResultSet rs=ViewProjectServlet.getProjects(userName);
+								while (rs.next()){
+									String student_id=rs.getString(1);
+									String depatment =rs.getString(2);
+									String cpi =rs.getString(3);
+									String student_name =rs.getString(4);
+									String project_id =rs.getString(7);
+									String status  =rs.getString(8);
+									String project_name =rs.getString(10);
+									String description =rs.getString(11);
+									String vacancies =rs.getString(12);
+									String  total_slots =rs.getString(13);
+									String  interval =rs.getString(13);
+									String year =rs.getString(14);
+									String apply_by  =rs.getString(15);
+									boolean hard=ViewProjectServlet.checkHard(project_id, student_id);
+									boolean soft=ViewProjectServlet.checkSoft(project_id, student_id);
+									
+								}
+								%>
 							</article>
 					
 					</div>
