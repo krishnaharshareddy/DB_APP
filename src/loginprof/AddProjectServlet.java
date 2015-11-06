@@ -52,6 +52,16 @@ public class AddProjectServlet extends HttpServlet {
 			Connection connection=null;
 			try{
 				connection=getConnection();
+				PreparedStatement pstmt1= connection.prepareStatement("select project_id from project order by project_id desc limit 1");
+				ResultSet rs = pstmt1.executeQuery();
+				String lastProjId="100100";
+				while(rs.next()){
+					lastProjId=rs.getString(1);
+				}
+				lastProjId=lastProjId.substring(3, 8);
+				int tmp = Integer.parseInt(lastProjId);
+				tmp++;
+				ProjectID="pid"+tmp;
 				PreparedStatement pstmt2= connection.prepareStatement("insert into project values(?,?,?,?,?);");
 				pstmt2.setString(1, ProjectID);
 				pstmt2.setString(2, ProjectName);
