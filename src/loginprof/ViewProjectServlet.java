@@ -1,14 +1,17 @@
 package loginprof;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -39,13 +42,11 @@ public class ViewProjectServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
-	}
+	
 	
 	public static ResultSet getProjects(String userName)
 	{
+		System.out.println("Getting Projects");
 		Connection connection=null;
 		ResultSet rs=null;
 		try{
@@ -61,14 +62,14 @@ public class ViewProjectServlet extends HttpServlet {
 		}
 		return rs;
 	}
-	public static ResultSet getProjects(String userName)
+	public static ResultSet getStudentList(String project_id)
 	{
 		Connection connection=null;
 		ResultSet rs=null;
 		try{
 			connection=getConnection();
-			PreparedStatement pstmt= connection.prepareStatement("select * from project natural join floats where prof_id=? order by project.project_id;");
-			pstmt.setString(1, userName);
+			PreparedStatement pstmt= connection.prepareStatement("select * from student natural join applied where applied.project_id=?;");
+			pstmt.setString(1, project_id);
 			rs= pstmt.executeQuery();
 			
 		} catch(SQLException sqle){
