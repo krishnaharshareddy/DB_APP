@@ -51,7 +51,7 @@ public class ViewProjectServlet extends HttpServlet {
 		ResultSet rs=null;
 		try{
 			connection=getConnection();
-			PreparedStatement pstmt= connection.prepareStatement("select * from project natural join floats where prof_id=? order by project.project_id;");
+			PreparedStatement pstmt= connection.prepareStatement("select * from project natural join floats where prof_id=? order by floats.apply_by;");
 			pstmt.setString(1, userName);
 			rs= pstmt.executeQuery();
 			
@@ -68,7 +68,7 @@ public class ViewProjectServlet extends HttpServlet {
 		ResultSet rs=null;
 		try{
 			connection=getConnection();
-			PreparedStatement pstmt= connection.prepareStatement("select * from student natural join applied where applied.project_id=?;");
+			PreparedStatement pstmt= connection.prepareStatement("select * from student natural join applied where applied.project_id=? order by student.cpi desc;");
 			pstmt.setString(1, project_id);
 			rs= pstmt.executeQuery();
 			
@@ -111,6 +111,26 @@ public class ViewProjectServlet extends HttpServlet {
 			ResultSet rs= pstmt.executeQuery();
 			while (rs.next()){
 				res=false;
+			}
+			
+		} catch(SQLException sqle){
+			System.out.println("SQL exception when getting soft");
+		} finally{
+			closeConnection(connection);
+		}
+		return res;
+	}
+	public static boolean checkFinalized(String project_id)
+	{
+		Connection connection=null;
+		boolean res = false;
+		try{
+			connection=getConnection();
+			PreparedStatement pstmt= connection.prepareStatement("select * from applied where project_id=? and status!='Waiting';");
+			pstmt.setString(1, project_id);
+			ResultSet rs= pstmt.executeQuery();
+			while (rs.next()){
+				res=true;
 			}
 			
 		} catch(SQLException sqle){

@@ -29,24 +29,20 @@
 		<script src="js/skel.min.js"></script>
 		<script src="js/skel-layers.min.js"></script>
 		<script src="js/init.js"></script>
-		<script type = "text/javascript">
-		function displaysop(s) {
-			document.getElementById("sop_section").innerHTML=s;
-		}
-		</script>
 		<noscript>
 			<link rel="stylesheet" href="css/skel.css" />
 			<link rel="stylesheet" href="css/style.css" />
 			<link rel="stylesheet" href="css/style-desktop.css" />
 		</noscript>
 	</head>
+	
 	<body class="homepage">
 
 			<div id="header-wrapper">
 				<div id="logoseperator">
 				<div id="header" class="container">
-						<h2 style="float: left"><strong><font size="6em">Welcome</font></strong></h2>
-						<form style="float: right" action="ProfLogoutServlet" method="post">
+						<h2 style="float: left"><strong><font size="6em">Project Status</font></strong></h2>
+						<form style="float: right" action="StudentLogoutServlet" method="post">
 			            <input type="submit" value="Logout">
 			        	</form>
 					</div>
@@ -62,24 +58,25 @@
 					<!-- Nav -->
 						<nav id="nav">
 							<ul>
-								<li><a class="icon fa-home" href="prof_view.jsp"><span><strong>View Projects</strong></span></a></li>
-								<li><a class="icon fa-institution" href="prof_float.jsp"><span>Float Projects</span></a></li>
-								<li><a class="icon fa-institution" href="prof_final.jsp"><span>Finalise List</span></a></li>
+								<li><a class="icon fa-home" href="student_browse.jsp"><span>View Projects</span></a></li>
+								<li><a class="icon fa-institution" href="student_status.jsp"><span><strong>Check Status</strong></span></a></li>
 							</ul>
 						</nav>
 					</div>
 				</div>
 			</div>
 			
+			
+			
+		<!-- Main -->
 			<div id="main-wrapper">
 				<div id="main" class="container">
 					<div id="content">
 
 						<!-- Post -->
 							<article class="box post">
-								<div style="width: 50%; float: left">
-								<!-- Needs to have which project are published and their corresponding SOP -->
-								<%
+								<form action="action_page.php">
+								  <%
 								ResultSet rs=ViewProjectServlet.getProjects(userName);
 								while (rs.next()){
 									String project_id=rs.getString(1);
@@ -93,7 +90,7 @@
 									java.sql.Date applydate=rs.getDate(9);
 									java.sql.Date date = new java.sql.Date(Calendar.getInstance().getTime().getTime());
 									boolean finalized = ViewProjectServlet.checkFinalized(project_id);
-									if(applydate.compareTo(date)<0 && !finalized)
+									if(applydate.compareTo(date)<0 && finalized)
 									{
 										out.println("<strong>Project ID: </strong>"+project_id+"  "+"<strong>Project Name: </strong>"+project_name+"<br>"+"<strong>Project Description: </strong>"+project_desc+"<br>");
 										out.println("<strong>Vacancies: </strong>"+project_vacancies+"  "+"<strong>Total Slots: </strong>"+project_total_slots+"  "+"<strong>Interval: </strong>"+project_interval+"  ");
@@ -113,14 +110,12 @@
 											String student_sop=students.getString(9);
 											boolean hard=ViewProjectServlet.checkHard(project_id, student_id);
 											boolean soft=ViewProjectServlet.checkSoft(project_id, student_id);
-											out.println("<input type='checkbox'  value='false' onchange='if(this.checked) this.value=\'true\'; else this.value=\'false\';' name='"+project_id+"_student_marked_"+student_id+"' />");
 											out.println("<strong>Name: </strong>"+student_name+" "+"<strong>Department: </strong>"+student_department);
 											out.println("<strong>CPI: </strong>"+student_cpi+"<br>"+"<strong>Status: </strong>"+student_status);
 											if(hard) out.println("<strong>Hard Prerequisites: </strong>"+"&#10004");
 											else out.println("<strong>Hard Prerequisites: </strong>"+"&#10008");
 											if(soft) out.println("<strong>Soft Prerequisites: </strong>"+"&#10004");
 											else out.println("<strong>Soft Prerequisites: </strong>"+"&#10008");
-											out.println("<input type='button' value='See SOP' onClick=\"displaysop('"+student_sop+"')\"");
 											
 										}
 										out.println("<input type='hidden' value='"+student_count+"' name='student_count'>");
@@ -132,20 +127,7 @@
 								}
 								
 								%>
-								</div>
-								
-								<div style="width: 50%; float: left">
-									<div id="header-wrapper">
-										<div id="logoseperator">
-										<div id="header" class="container">
-												<h2 style="float: left"><strong><font size="6em">SOP</font></strong></h2>
-											</div>
-										</div>
-									</div>
-									<div id="section">
-										<p id="sop_section"></p>
-									</div>
-								</div>
+								</form>
 							</article>
 					
 					</div>
@@ -154,3 +136,5 @@
 
 	</body>
 </html>
+	
+
