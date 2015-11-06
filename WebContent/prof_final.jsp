@@ -1,6 +1,21 @@
-<!DOCTYPE HTML>
+<%@ page language="java" contentType="text/html; charset=US-ASCII"
+    pageEncoding="US-ASCII"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
 <html>
 	<head>
+		<%
+            String userName = null;
+            Cookie[] cookies = request.getCookies();
+            if (cookies != null) {
+                for (Cookie cookie : cookies) {
+                    if (cookie.getName().equals("User"))
+                        userName = cookie.getValue();
+                }
+            }
+            if (userName == null)
+                response.sendRedirect("prof.html");
+        %>
 		<title>STUDENT LOGIN FORM</title>
 		<link rel="shortcut icon" href="images/iitblogo.jpg">
 		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
@@ -22,7 +37,10 @@
 			<div id="header-wrapper">
 				<div id="logoseperator">
 				<div id="header" class="container">
-						<h2 style="float: left"><strong><font size="6em">Professor Login Form</font></strong></h2>
+						<h2 style="float: left"><strong><font size="6em">Project Application Form</font></strong></h2>
+						<form style="float: right" action="ProfLogoutServlet" method="post">
+			            <input type="submit" value="Logout">
+			        	</form>
 					</div>
 				</div>
 			</div>
@@ -36,8 +54,9 @@
 					<!-- Nav -->
 						<nav id="nav">
 							<ul>
-								<li><a class="icon fa-home" href="student.html"><span>Student Login Form</span></a></li>
-								<li><a class="icon fa-institution" href="prof.html"><span><strong>Professor Login Form</strong></span></a></li>
+								<li><a class="icon fa-home" href="prof_view.jsp"><span>View Projects</span></a></li>
+								<li><a class="icon fa-institution" href="prof_float.jsp"><span>Float Projects</span></a></li>
+								<li><a class="icon fa-institution" href="prof_final.jsp"><span><strong>Finalise List</strong></span></a></li>
 							</ul>
 						</nav>
 					</div>
@@ -53,14 +72,8 @@
 
 						<!-- Post -->
 							<article class="box post">
-								<form action="ProfLoginServlet" method="post"">
-								  Username:<br>
-								  <input type="text" name="username" id="username" value="">
-								  <br>
-								  Password:<br>
-								  <input type="password" name="password" id="password" value="">
-								  <br><br>
-								  <input type="submit" value="Submit">
+								<form action="action_page.php">
+								  
 								</form>
 							</article>
 					

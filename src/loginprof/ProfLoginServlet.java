@@ -16,16 +16,17 @@ public class ProfLoginServlet extends HttpServlet{
  
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
  
+    	
         // get request parameters for userID and password
-        String crunchifyUser = request.getParameter("username");
+        String user = request.getParameter("username");
         String pwd = request.getParameter("password");
  
-        if (userID.equals(crunchifyUser) && password.equals(pwd)) {
-            Cookie cookie = new Cookie("crunchifyUser", crunchifyUser);
+        if (userID.equals(user) && password.equals(pwd)) {
+            Cookie cookie = new Cookie("User", user);
             // setting cookie to expiry in 60 mins
             cookie.setMaxAge(60 * 60);
             response.addCookie(cookie);
-            response.sendRedirect("proflogin.jsp");
+            response.sendRedirect("profafterlogin.jsp");
         } else {
             RequestDispatcher rd = getServletContext().getRequestDispatcher("/prof.html");
             PrintWriter out = response.getWriter();

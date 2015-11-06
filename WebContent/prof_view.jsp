@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=US-ASCII"
     pageEncoding="US-ASCII"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
 <html>
 	<head>
 		<%
@@ -15,7 +16,7 @@
             if (userName == null)
                 response.sendRedirect("prof.html");
         %>
-		<title>Welcome <%=userName %></title>
+		<title>Welcome</title>
 		<link rel="shortcut icon" href="images/iitblogo.jpg">
 		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 		<meta name="description" content="" />
@@ -36,13 +37,15 @@
 			<div id="header-wrapper">
 				<div id="logoseperator">
 				<div id="header" class="container">
-						<h2 style="float: left"><strong><font size="6em">Hello <%=userName %></font></strong></h2>
+						<h2 style="float: left"><strong><font size="6em">Welcome</font></strong></h2>
 						<form style="float: right" action="ProfLogoutServlet" method="post">
 			            <input type="submit" value="Logout">
 			        	</form>
-        		</div>
+					</div>
 				</div>
 			</div>
+			
+			
 			<div id="header-wrapper">
 				
 						<div id="seperator">		
@@ -53,16 +56,25 @@
 							<ul>
 								<li><a class="icon fa-home" href="prof_view.jsp"><span><strong>View Projects</strong></span></a></li>
 								<li><a class="icon fa-institution" href="prof_float.jsp"><span>Float Projects</span></a></li>
-								<li><a class="icon fa-institution" href="prof_final.jsp"><span>Finalize List</span></a></li>
+								<li><a class="icon fa-institution" href="prof_final.jsp"><span>Finalise List</span></a></li>
 							</ul>
 						</nav>
 					</div>
 				</div>
 			</div>
 			
-			
-			
+			<div id="main-wrapper">
+				<div id="main" class="container">
+					<div id="content">
 
+						<!-- Post -->
+							<article class="box post">
+								<!-- Needs to have which project are published and their corresponding SOP -->
+							</article>
+					
+					</div>
+				</div>
+			</div>
 
 	</body>
 </html>
