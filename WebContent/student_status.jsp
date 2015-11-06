@@ -1,4 +1,8 @@
-
+<%@ page language="java" contentType="text/html; charset=US-ASCII"
+    pageEncoding="US-ASCII"%>
+<%@ page import="java.util.*" %>
+<%@ page import="java.sql.*" %>
+<%@ page import="loginprof.StudentStatusServlet" %>
 <!DOCTYPE HTML>
 <html>
 	<head>
@@ -70,7 +74,15 @@
 						<!-- Post -->
 							<article class="box post">
 								<form action="action_page.php">
-								  
+								  <%
+								  ResultSet rs = StudentStatusServlet.getStatus(userName);
+								  while(rs.next()) {
+									  String project_id = rs.getString(1);
+									  String project_name = rs.getString(5);
+									  String status = rs.getString(3);
+									  out.println(project_id+" "+project_name+" "+status+"<br>");
+								  }
+								  %>
 								</form>
 							</article>
 					
