@@ -58,7 +58,7 @@ public class AddProjectServlet extends HttpServlet {
 				while(rs.next()){
 					lastProjId=rs.getString(1);
 				}
-				lastProjId=lastProjId.substring(3, 8);
+				lastProjId=lastProjId.substring(3, lastProjId.length());
 				int tmp = Integer.parseInt(lastProjId);
 				tmp++;
 				ProjectID="pid"+tmp;
