@@ -74,13 +74,16 @@
 						<!-- Post -->
 							<article class="box post">
 								<form action="action_page.php">
-								  <%
+								   <%
 								  ResultSet rs = StudentStatusServlet.getStatus(userName);
 								  while(rs.next()) {
 									  String project_id = rs.getString(1);
 									  String project_name = rs.getString(5);
 									  String status = rs.getString(3);
-									  out.println(project_id+" "+project_name+" "+status+"<br>");
+									  String interval = rs.getString(10);
+									  String year = rs.getString(11);
+									  String prof_name = rs.getString(14);
+									  out.println(project_id+" "+project_name+" "+status+" "+interval+" "+year+" "+prof_name+"<br>");
 								  }
 								  %>
 								</form>

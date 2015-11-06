@@ -1,4 +1,6 @@
-
+<%@ page import="java.util.*" %>
+<%@ page import="java.sql.*" %>
+<%@ page import="loginprof.StudentStatusServlet" %>
 <!DOCTYPE HTML>
 <html>
 	<head>
@@ -69,8 +71,32 @@
 
 						<!-- Post -->
 							<article class="box post">
-								<form action="action_page.php">
-								  
+								  <%
+								  ResultSet rs = StudentStatusServlet.allProjects(userName);
+								  out.println("<form action=\"ApplyToProject\" id=\"usrform\" method=\"post\">");
+								  while(rs.next()) {
+									  String project_id = rs.getString(1);
+									  String project_name = rs.getString(2);
+									  String project_desc = rs.getString(3);
+									  String project_vacancies = rs.getString(4);
+									  String project_interval = rs.getString(7);
+									  String project_year = rs.getString(8);
+									  java.sql.Date applydate=rs.getDate(9);
+									  String prof_name = rs.getString(11);
+									  String prof_dept = rs.getString(12);
+									  java.sql.Date date = new java.sql.Date(Calendar.getInstance().getTime().getTime());
+									  boolean allowed = StudentStatusServlet.checkPrerequisites(userName, project_id);
+									  if(allowed && Integer.parseInt(project_vacancies)>0)
+									  {
+									  	out.println("<p><input type='radio' name='project_selected' value='"+project_id+"'>");
+									  	out.println(project_id+project_name+"</p><br><br><br>");
+									  }
+								  }
+								  out.println("Please Fill your Statement of Purpose:<br>");
+								  out.println("<textarea rows=\"4\" cols=\"50\" name=\"SOP\" form=\"usrform\" value=\"\"></textarea><br>");
+								  out.println("<input type='hidden' value='"+userName+"' name='student_id'>");
+								  out.println("<input type='submit' value='Apply to Project'>");
+								  %>
 								</form>
 							</article>
 					

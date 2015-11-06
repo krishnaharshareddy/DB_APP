@@ -1,3 +1,4 @@
+<%@page import="loginprof.FinalizeProjectServlet"%>
 <%@ page language="java" contentType="text/html; charset=US-ASCII"
     pageEncoding="US-ASCII"%>
 <%@ page import="java.util.*" %>
@@ -33,6 +34,8 @@
 		function displaysop(s) {
 			document.getElementById("sop_section").innerHTML=s;
 		}
+		
+
 		</script>
 		<noscript>
 			<link rel="stylesheet" href="css/skel.css" />
@@ -77,7 +80,7 @@
 
 						<!-- Post -->
 							<article class="box post">
-								<div style="width: 50%; float: left">
+								<div style="width: 60%; float: left">
 								<!-- Needs to have which project are published and their corresponding SOP -->
 								<%
 								ResultSet rs=ViewProjectServlet.getProjects(userName);
@@ -93,18 +96,18 @@
 									java.sql.Date applydate=rs.getDate(9);
 									java.sql.Date date = new java.sql.Date(Calendar.getInstance().getTime().getTime());
 									boolean finalized = ViewProjectServlet.checkFinalized(project_id);
-									if(applydate.compareTo(date)<0 && !finalized)
+									
+									if(!finalized)
 									{
-										out.println("<strong>Project ID: </strong>"+project_id+"  "+"<strong>Project Name: </strong>"+project_name+"<br>"+"<strong>Project Description: </strong>"+project_desc+"<br>");
+										out.println("<hr> <h1>Project ID: "+project_id+"</h1>  "+"<strong>Project Name: </strong>"+project_name+"<br>"+"<strong>Project Description: </strong>"+project_desc+"<br>");
 										out.println("<strong>Vacancies: </strong>"+project_vacancies+"  "+"<strong>Total Slots: </strong>"+project_total_slots+"  "+"<strong>Interval: </strong>"+project_interval+"  ");
-										out.println("<strong>Year: </strong>"+project_year+"  "+"<strong>Apply by Date: </strong>"+project_apply_by+"  ");
+										out.println("<strong>Year: </strong>"+project_year+"  "+"<strong>Apply by Date: </strong>"+project_apply_by+"  " +"<br> <br>");
 										ResultSet students = ViewProjectServlet.getStudentList(project_id);
 										int student_count=0;
-										out.println("<form>");
+										out.println("<form action=\"FinalizeProjectServlet\" id=\"usrform\" method=\"post\">");
 										out.println("<input type='hidden' value='"+project_id+"' name='project_id'>");
 										while(students.next())
 										{
-											student_count++;
 											String student_id=students.getString(1);
 											String student_department=students.getString(2);
 											String student_cpi=students.getString(3);
@@ -113,18 +116,33 @@
 											String student_sop=students.getString(9);
 											boolean hard=ViewProjectServlet.checkHard(project_id, student_id);
 											boolean soft=ViewProjectServlet.checkSoft(project_id, student_id);
-											out.println("<input type='checkbox'  value='false' onchange='if(this.checked) this.value=\'true\'; else this.value=\'false\';' name='"+project_id+"_student_marked_"+student_id+"' />");
+											String student_counts=""+student_count;
+											out.println("<input type='hidden'  value='"+student_id+"' name='"+project_id+"_student_id_"+student_counts+"' />");
+											out.println("<input type='checkbox'  value=\"false\" onchange='if(this.checked) this.value=\"true\"; else this.value=\"false\";' name='"+project_id+"_student_marked_"+student_counts+"' />");
 											out.println("<strong>Name: </strong>"+student_name+" "+"<strong>Department: </strong>"+student_department);
 											out.println("<strong>CPI: </strong>"+student_cpi+"<br>"+"<strong>Status: </strong>"+student_status);
 											if(hard) out.println("<strong>Hard Prerequisites: </strong>"+"&#10004");
 											else out.println("<strong>Hard Prerequisites: </strong>"+"&#10008");
-											if(soft) out.println("<strong>Soft Prerequisites: </strong>"+"&#10004");
-											else out.println("<strong>Soft Prerequisites: </strong>"+"&#10008");
-											out.println("<input type='button' value='See SOP' onClick=\"displaysop('"+student_sop+"')\"");
-											
+											if(soft) out.println("<strong>Soft Prerequisites: </strong>"+"&#10004 <br>");
+											else out.println("<strong>Soft Prerequisites: </strong>"+"&#10008 <br>");
+											out.println("<a href='#sop_sections' ><input class='myButton' type='myButton'  value='See SOP' onClick=\"displaysop('"+student_sop+"')\"></a> <br> <br>");
+											student_count++;
 										}
-										out.println("<input type='hidden' value='"+student_count+"' name='student_count'>");
-										out.println("<form>");
+										out.println("<div style='float: left'>");
+										out.println("<input type='hidden' value='"+student_count+"' name='student_number'>");
+										if(applydate.compareTo(date)<0)
+										{
+											out.println("<input type='submit' value='Finalize Project'>");
+										}
+										out.println("</form>");
+										out.println("</div>");
+										out.println("<div style='float: right'>");
+										out.println("<form action=\"DeleteProjectServlet\" id=\"usrform\" method=\"post\">");
+										out.println("<input type='hidden' value='"+project_id+"' name='project_id'>");
+										out.println("<input type='submit' value='Delete Project'>");
+										out.println("</form>");
+										out.println("</div>");
+										out.println("<br><br>");
 									}
 									
 									
@@ -134,16 +152,17 @@
 								%>
 								</div>
 								
-								<div style="width: 50%; float: left">
-									<div id="header-wrapper">
+									<a name="sop_sections" id="sop_sections"></a>
+								<div class="wrapper" style="width: 35%; float: right" >
+								<div id="header-wrapper">
 										<div id="logoseperator">
 										<div id="header" class="container">
-												<h2 style="float: left"><strong><font size="6em">SOP</font></strong></h2>
-											</div>
+												<h2 align="center"><strong><font size="6em">Statement of Purpose</font></strong></h2>
+										</div>
 										</div>
 									</div>
 									<div id="section">
-										<p id="sop_section"></p>
+										<p id="sop_section">ChandraKanth is black.Black is Chandrkanth. Fuck everyone because chandrakanthso black</p>
 									</div>
 								</div>
 							</article>

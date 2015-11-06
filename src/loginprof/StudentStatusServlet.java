@@ -65,6 +65,52 @@ public class StudentStatusServlet extends HttpServlet {
 		}
 	}
 	
+	public static ResultSet allProjects(String studentId)
+	{
+		System.out.println("Getting Allowed Projects");
+		Connection connection=null;
+		ResultSet rs=null;
+		try{
+			connection=getConnection();
+			PreparedStatement pstmt= connection.prepareStatement(" select * from project natural join floats,professor where floats.prof_id=professor.prof_id and not exists(select * from applied where applied.project_id=project.project_id and applied.student_id=?);");
+			pstmt.setString(1, studentId);
+			rs= pstmt.executeQuery();
+			
+		} catch(SQLException sqle){
+			System.out.println("SQL exception when getting project list");
+		} finally{
+			closeConnection(connection);
+		}
+		return rs;
+	}
+	
+	public static boolean checkPrerequisites(String studentId,String projectID)
+	{
+		System.out.println("Checking Prerequisites");
+		Connection connection=null;
+		ResultSet rs=null;
+		boolean test=true;
+		try{
+			connection=getConnection();
+			PreparedStatement pstmt= connection.prepareStatement(" select * from prerequisite where prerequisite.project_id=? and prerequisite.type='Hard' and not exists(select * from takes where prerequisite.course_id=takes.course_id and takes.student_id=?);");
+			pstmt.setString(1, projectID);
+			pstmt.setString(2, studentId);
+			rs= pstmt.executeQuery();
+			while(rs.next())
+			{
+				test=false;
+				break;
+			}
+			
+			
+		} catch(SQLException sqle){
+			System.out.println("SQL exception when getting project list");
+		} finally{
+			closeConnection(connection);
+		}
+		return test;
+	}
+	
 	public static ResultSet getStatus(String studentId)
 	{
 		System.out.println("Getting Projects");
@@ -72,7 +118,7 @@ public class StudentStatusServlet extends HttpServlet {
 		ResultSet rs=null;
 		try{
 			connection=getConnection();
-			PreparedStatement pstmt= connection.prepareStatement("select * from applied natural join project where student_id=? order by project.project_id;");
+			PreparedStatement pstmt= connection.prepareStatement(" select * from applied natural join project natural join floats,professor where professor.prof_id=floats.prof_id and applied.student_id=?;");
 			pstmt.setString(1, studentId);
 			rs= pstmt.executeQuery();
 			

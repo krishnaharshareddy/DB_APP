@@ -77,7 +77,7 @@
 						<!-- Post -->
 							<article class="box post">
 								<form action="action_page.php">
-								  <%
+								<%
 								ResultSet rs=ViewProjectServlet.getProjects(userName);
 								while (rs.next()){
 									String project_id=rs.getString(1);
@@ -91,18 +91,15 @@
 									java.sql.Date applydate=rs.getDate(9);
 									java.sql.Date date = new java.sql.Date(Calendar.getInstance().getTime().getTime());
 									boolean finalized = ViewProjectServlet.checkFinalized(project_id);
-									if(applydate.compareTo(date)<0 && finalized)
+									if(finalized)
 									{
-										out.println("<strong>Project ID: </strong>"+project_id+"  "+"<strong>Project Name: </strong>"+project_name+"<br>"+"<strong>Project Description: </strong>"+project_desc+"<br>");
+										out.println("<hr> <h1>Project ID: "+project_id+"</h1>  "+"<strong>Project Name: </strong>"+project_name+"<br>"+"<strong>Project Description: </strong>"+project_desc+"<br>");
 										out.println("<strong>Vacancies: </strong>"+project_vacancies+"  "+"<strong>Total Slots: </strong>"+project_total_slots+"  "+"<strong>Interval: </strong>"+project_interval+"  ");
-										out.println("<strong>Year: </strong>"+project_year+"  "+"<strong>Apply by Date: </strong>"+project_apply_by+"  ");
+										out.println("<strong>Year: </strong>"+project_year+"  "+"<br> <br>");
 										ResultSet students = ViewProjectServlet.getStudentList(project_id);
 										int student_count=0;
-										out.println("<form>");
-										out.println("<input type='hidden' value='"+project_id+"' name='project_id'>");
 										while(students.next())
 										{
-											student_count++;
 											String student_id=students.getString(1);
 											String student_department=students.getString(2);
 											String student_cpi=students.getString(3);
@@ -111,16 +108,13 @@
 											String student_sop=students.getString(9);
 											boolean hard=ViewProjectServlet.checkHard(project_id, student_id);
 											boolean soft=ViewProjectServlet.checkSoft(project_id, student_id);
-											out.println("<strong>Name: </strong>"+student_name+" "+"<strong>Department: </strong>"+student_department);
-											out.println("<strong>CPI: </strong>"+student_cpi+"<br>"+"<strong>Status: </strong>"+student_status);
-											if(hard) out.println("<strong>Hard Prerequisites: </strong>"+"&#10004");
-											else out.println("<strong>Hard Prerequisites: </strong>"+"&#10008");
-											if(soft) out.println("<strong>Soft Prerequisites: </strong>"+"&#10004");
-											else out.println("<strong>Soft Prerequisites: </strong>"+"&#10008");
-											
+											String student_counts=""+student_count;
+											out.println("<strong>Name: </strong>"+student_name+"   "+"<strong>Department: </strong>"+student_department);
+											out.println("<strong>   CPI: </strong>"+student_cpi+"   "+"<strong>Status: </strong>"+student_status);
+											out.println("<br>");
+											student_count++;
 										}
-										out.println("<input type='hidden' value='"+student_count+"' name='student_count'>");
-										out.println("<form>");
+										
 									}
 									
 									

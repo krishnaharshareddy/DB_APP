@@ -134,7 +134,7 @@ public class ViewProjectServlet extends HttpServlet {
 			}
 			
 		} catch(SQLException sqle){
-			System.out.println("SQL exception when getting soft");
+			System.out.println("SQL exception when finalizing");
 		} finally{
 			closeConnection(connection);
 		}

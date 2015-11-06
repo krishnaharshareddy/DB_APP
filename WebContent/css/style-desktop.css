@@ -49,9 +49,45 @@
 		{
 			font-size: 0.85em;
 			letter-spacing: 2px;
-			padding: 0.85em 2.75em 0.85em 2.75em;
+			padding: 0.75em 2.75em 0.75em 2.75em;
 		}
 		
+ .myButton {
+   font-size: 0.85em;
+			letter-spacing: 2px;
+			padding: 0.25em 0.5em 0.25em 0.5em;
+   }
+
+
+.Fixed
+{
+    position: fixed;
+    top: 0px;
+    
+}
+		
+.wrapper {
+    width: 940px;
+    margin: 0 auto;
+    position: relative; /* Ensure absolute positioned child elements are relative to this */
+}
+
+/* Absolute positioned wrapper for the element you want to fix position */
+.fixed-wrapper {
+    width: 220px;
+    position: absolute;
+    top: 0;
+    left: -240px; /* Move this out to the left of the site body, leaving a 20px gutter */
+}
+
+/* The element you want to fix the position of */
+.fixed {
+    width: 220px;
+    position: fixed;
+    /* Do not set top / left! */
+}
+
+
 	/* List */
 
 		ul.actions

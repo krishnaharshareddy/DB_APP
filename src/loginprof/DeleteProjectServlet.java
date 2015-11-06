@@ -5,7 +5,6 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import javax.servlet.RequestDispatcher;
@@ -16,16 +15,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Servlet implementation class FinalizeProjectServlet
+ * Servlet implementation class DeleteProjectServlet
  */
-@WebServlet("/FinalizeProjectServlet")
-public class FinalizeProjectServlet extends HttpServlet {
+@WebServlet("/DeleteProjectServlet")
+public class DeleteProjectServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public FinalizeProjectServlet() {
+    public DeleteProjectServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -38,45 +37,28 @@ public class FinalizeProjectServlet extends HttpServlet {
 		response.getWriter().append("Served at: ").append(request.getContextPath());
 	}
 
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		{
 	        String project_id = request.getParameter("project_id");
-	        String xstudent_number = request.getParameter("student_number");
-	        int student_number = Integer.parseInt(xstudent_number);
 	        Connection connection = null;
 	        try{
 				connection=getConnection();
-				for(int i=0;i<student_number;i++)
-				{
-					String stud=i+"";
-					String student_id = request.getParameter(project_id+"_student_id_"+stud);
-					String student_marked = request.getParameter(project_id+"_student_marked_"+stud);
-					System.out.println(student_marked);
-					if(student_marked!=null)
-					{
-						PreparedStatement pstmt1= connection.prepareStatement("update applied set status = 'Accepted' where project_id=? and student_id=?;");
-						pstmt1.setString(1,project_id);
-						pstmt1.setString(2,student_id);
-						pstmt1.executeUpdate();
-					}
-					else
-					{
-						PreparedStatement pstmt1= connection.prepareStatement("update applied set status = 'Rejected' where project_id=? and student_id=?;");
-						pstmt1.setString(1,project_id);
-						pstmt1.setString(2,student_id);
-						pstmt1.executeUpdate();
-					}
-				}
+				PreparedStatement pstmt1= connection.prepareStatement("delete from project where project_id=?;");
+				pstmt1.setString(1,project_id);
+				pstmt1.executeUpdate();
 	        } catch(SQLException sqle){
 				System.out.println("SQL exception when inserting project");
 			}
 	        finally{
 				closeConnection(connection);
 			}
-	        RequestDispatcher rd = getServletContext().getRequestDispatcher("/prof_final.jsp");
+	        RequestDispatcher rd = getServletContext().getRequestDispatcher("/prof_view.jsp");
             PrintWriter out = response.getWriter();
-            out.println("<font color=red>Finalized Succesfully! .</font>\n");
+            out.println("<font color=red>Deleted Succesfully! .</font>\n");
             rd.include(request, response);
 	 
 	    }
