@@ -16,6 +16,9 @@
 		<script src="js/skel.min.js"></script>
 		<script src="js/skel-layers.min.js"></script>
 		<script src="js/init.js"></script>
+		<script src="sweetalert-master/dist/sweetalert.min.js"></script> 
+  		<script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="sweetalert-master/dist/sweetalert.css">
 		<noscript>
 			<link rel="stylesheet" href="css/skel.css" />
 			<link rel="stylesheet" href="css/style.css" />
@@ -76,6 +79,8 @@
 								<form action="action_page.php">
 								   <%
 								  ResultSet rs = StudentStatusServlet.getStatus(userName);
+								   out.println("<table border='1'>");
+								   out.println("<td> <strong>Project ID</strong> </td> <td> <strong>Project Name</strong> </td> <td> <strong>Status</strong> </td> <td> <strong>Interval</strong> </td> <td> <strong>Year</strong> </td> <td> <strong>Under guidance of</strong> </td> ");
 								  while(rs.next()) {
 									  String project_id = rs.getString(1);
 									  String project_name = rs.getString(5);
@@ -83,8 +88,9 @@
 									  String interval = rs.getString(10);
 									  String year = rs.getString(11);
 									  String prof_name = rs.getString(14);
-									  out.println(project_id+" "+project_name+" "+status+" "+interval+" "+year+" "+prof_name+"<br>");
+									  out.println("<tr> <td> <strong>"+project_id+"</strong></td> <td> "+project_name+"</td> <td> "+status+"</td> <td>"+interval+"</td> <td>"+year+"</td> <td> "+prof_name+"</td> </tr> <br>");
 								  }
+								  out.println("</table>");
 								  %>
 								</form>
 							</article>

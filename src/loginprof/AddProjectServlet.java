@@ -51,8 +51,19 @@ public class AddProjectServlet extends HttpServlet {
             String ProjectID="225342";
 			Connection connection=null;
 			try{
+				int yearofproject=Integer.parseInt(Dates.substring(0, 4));
+				int yearshown=Integer.parseInt(Year);
+				if(yearofproject>yearshown)
+				{
+					RequestDispatcher rd = getServletContext().getRequestDispatcher("/prof_float.jsp");
+		            PrintWriter out = response.getWriter();
+		            out.println("<font id='USEFORSWAL_YEAR' color=red>Year of project must not be less than the last date to apply .</font>\n");
+		            rd.include(request, response);
+				}
+				else
+				{
 				connection=getConnection();
-				PreparedStatement pstmt1= connection.prepareStatement("select project_id from project order by project_id desc limit 1");
+				PreparedStatement pstmt1= connection.prepareStatement("select project_id from project order by length(project_id) desc,project_id desc limit 1;");
 				ResultSet rs = pstmt1.executeQuery();
 				String lastProjId="100100";
 				while(rs.next()){
@@ -76,7 +87,7 @@ public class AddProjectServlet extends HttpServlet {
 				pstmt.setString(2, userName);
 				pstmt.setString(3, Interval);
 				pstmt.setInt(4,Integer.parseInt(Year));
-				SimpleDateFormat formatter = new SimpleDateFormat("yyyy-mm-dd");
+				SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 				Date myDate = formatter.parse(Dates);
 				java.sql.Date sqlDate = new java.sql.Date(myDate.getTime());
 				pstmt.setDate(5, sqlDate);
@@ -90,6 +101,7 @@ public class AddProjectServlet extends HttpServlet {
 					pstmt3.setString(1, ProjectID);
 					pstmt3.setString(2, Hard[i]);
 					pstmt3.setString(3, "Hard");
+					if (Hard[i].trim().length() > 0)
 					pstmt3.executeUpdate();
 					System.out.println(pstmt3);
 				}
@@ -99,8 +111,14 @@ public class AddProjectServlet extends HttpServlet {
 					pstmt3.setString(1, ProjectID);
 					pstmt3.setString(2, Soft[i]);
 					pstmt3.setString(3, "Soft");
+					if (Soft[i].trim().length() > 0)
 					pstmt3.executeUpdate();
 					System.out.println(pstmt3);
+				}
+				RequestDispatcher rd = getServletContext().getRequestDispatcher("/prof_float.jsp");
+	            PrintWriter out = response.getWriter();
+	            out.println("<font id='USEFORSWAL' color=red>Successfully Added .</font>\n");
+	            rd.include(request, response);
 				}
 				
 			} catch(SQLException sqle){
@@ -111,10 +129,7 @@ public class AddProjectServlet extends HttpServlet {
 			} finally{
 				closeConnection(connection);
 			}
-			RequestDispatcher rd = getServletContext().getRequestDispatcher("/prof_float.jsp");
-            PrintWriter out = response.getWriter();
-            out.println("<font color=red>Successfully Added .</font>\n");
-            rd.include(request, response);
+			
         }
 		
 	}

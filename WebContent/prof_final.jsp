@@ -30,6 +30,9 @@
 		<script src="js/skel.min.js"></script>
 		<script src="js/skel-layers.min.js"></script>
 		<script src="js/init.js"></script>
+		<script src="sweetalert-master/dist/sweetalert.min.js"></script> 
+  		<script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="sweetalert-master/dist/sweetalert.css">
 		<noscript>
 			<link rel="stylesheet" href="css/skel.css" />
 			<link rel="stylesheet" href="css/style.css" />
@@ -37,7 +40,10 @@
 		</noscript>
 	</head>
 	<body class="homepage">
-
+			<script>
+				var myElem = document.getElementById('USEFORSWAL_ADD');
+				if (myElem !== null) swal('Finalized Successfully!','You can look at the status here','success');
+			</script>
 			<div id="header-wrapper">
 				<div id="logoseperator">
 				<div id="header" class="container">

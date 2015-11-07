@@ -26,6 +26,9 @@
 		<script src="js/skel.min.js"></script>
 		<script src="js/skel-layers.min.js"></script>
 		<script src="js/init.js"></script>
+		<script src="sweetalert-master/dist/sweetalert.min.js"></script> 
+  		<script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="sweetalert-master/dist/sweetalert.css">
 		<noscript>
 			<link rel="stylesheet" href="css/skel.css" />
 			<link rel="stylesheet" href="css/style.css" />
@@ -33,7 +36,14 @@
 		</noscript>
 	</head>
 	<body class="homepage">
-
+			<script>
+				var myElem = document.getElementById('USEFORSWAL');
+				if (myElem !== null) swal('Added Successfully!','You can see the added project in the View Projects Section','success');
+			</script>
+			<script>
+				var myElem = document.getElementById('USEFORSWAL_YEAR');
+				if (myElem !== null) swal('Year error','The project\'s deadline is after the year of the project','error');
+			</script>
 			<div id="header-wrapper">
 				<div id="logoseperator">
 				<div id="header" class="container">
@@ -78,8 +88,7 @@
 								  <input type="text" name="ProjectName" value="">
 								  <br>
 								  Project Description:<br>
-								  <textarea rows="4" cols="50" name="ProjectDescription" form="usrform" value="">
-									</textarea>
+								  <textarea rows="4" cols="50" name="ProjectDescription" form="usrform" value=""></textarea>
 								  <br>
 								  Add Hard Prerequisite: (Use ; to add more) <br>
 								  <input type="text" name="HardPrerequisite" value="">
@@ -96,9 +105,9 @@
 								  </select>
 								  <br>
 								  Year:<br>
-								  <input type="number" name="Year" value="" min="2001" max="2020">
+								  <input type="number" name="Year" value="" min="2014" max="2020">
 								  <br>
-								  Number of Open Positions:<br>
+								 Maximum Applications to consider:<br>
 								  <input type="number" name="OpenPositions" value="" min="1" max="100">
 								  <br>
 								  Apply by date:<br>

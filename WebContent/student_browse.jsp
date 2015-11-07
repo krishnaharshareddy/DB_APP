@@ -14,11 +14,16 @@
 		<script src="js/skel.min.js"></script>
 		<script src="js/skel-layers.min.js"></script>
 		<script src="js/init.js"></script>
+		<script src="sweetalert-master/dist/sweetalert.min.js"></script> 
+  		<script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="sweetalert-master/dist/sweetalert.css">
 		<noscript>
+		
 			<link rel="stylesheet" href="css/skel.css" />
 			<link rel="stylesheet" href="css/style.css" />
 			<link rel="stylesheet" href="css/style-desktop.css" />
 		</noscript>
+		
 	</head>
 	<%
             String userName = null;
@@ -33,7 +38,13 @@
                 response.sendRedirect("student.html");
         %>
 	<body class="homepage">
-
+			<script>
+				var myElem = document.getElementById('USEFORSWAL');
+				if (myElem !== null) swal('Applied Successfully!','Apply to more if you would like to!','success');
+			</script><script>
+				var myElem = document.getElementById('USEFORSWAL_ERR');
+				if (myElem !== null) swal('Choose a Project!','Click on the circle next to a project to select it','error');
+			</script>
 			<div id="header-wrapper">
 				<div id="logoseperator">
 				<div id="header" class="container">
@@ -44,7 +55,6 @@
 					</div>
 				</div>
 			</div>
-			
 			
 			<div id="header-wrapper">
 				
@@ -74,6 +84,9 @@
 								  <%
 								  ResultSet rs = StudentStatusServlet.allProjects(userName);
 								  out.println("<form action=\"ApplyToProject\" id=\"usrform\" method=\"post\">");
+								  out.println("<table border='1'>");
+								  out.println("<tr><td> <strong>Choice</strong> </td><td> <strong>Project ID</strong> </td> <td> <strong>Project Name</strong> </td><td> <strong>Soft Prerequisites</strong> </td> <td> <strong>Interval</strong> </td> <td> <strong>Year</strong> </td> <td> <strong>Apply By</strong> </td> <td> <strong>Under guidance of</strong> </td> <td> <strong> Department </strong> </td> <td> <strong>Vacancies</strong> </td></tr>");
+								 
 								  while(rs.next()) {
 									  String project_id = rs.getString(1);
 									  String project_name = rs.getString(2);
@@ -85,13 +98,29 @@
 									  String prof_name = rs.getString(11);
 									  String prof_dept = rs.getString(12);
 									  java.sql.Date date = new java.sql.Date(Calendar.getInstance().getTime().getTime());
-									  boolean allowed = StudentStatusServlet.checkPrerequisites(userName, project_id);
-									  if(allowed && Integer.parseInt(project_vacancies)>0)
+									  boolean allowed = StudentStatusServlet.checkPrerequisites(userName, project_id,"Hard");
+									  boolean finalised = StudentStatusServlet.checkFinalized(project_id);
+									  if(Integer.parseInt(project_vacancies)>0 && !finalised)
 									  {
-									  	out.println("<p><input type='radio' name='project_selected' value='"+project_id+"'>");
-									  	out.println(project_id+project_name+"</p><br><br><br>");
+										if(allowed)
+									  		out.println("<tr><td><input type='radio' name='project_selected' value='"+project_id+"'></td>");
+										else
+											out.println("<tr><td></td>");
+										out.println("<td>"+project_id+"</td>");
+									  	out.println("<td><a href=\"javascript:swal('"+project_name+"','"+project_desc+"')\">"+project_name+"</td>");
+									  	if(StudentStatusServlet.checkPrerequisites(userName, project_id,"Soft"))
+									  		out.println("<td>&#10004</td>");
+									  	else
+									  		out.println("<td>&#10008</td>");
+									  	out.println("<td>"+project_interval+"</td>");
+									  	out.println("<td>"+project_year+"</td>");
+									  	out.println("<td>"+applydate+"</td>");
+									  	out.println("<td>"+prof_name+"</td>");
+									  	out.println("<td>"+prof_dept+"</td>");
+									  	out.println("<td>"+project_vacancies+"</td></tr>");
 									  }
 								  }
+								  out.println("</table>");
 								  out.println("Please Fill your Statement of Purpose:<br>");
 								  out.println("<textarea rows=\"4\" cols=\"50\" name=\"SOP\" form=\"usrform\" value=\"\"></textarea><br>");
 								  out.println("<input type='hidden' value='"+userName+"' name='student_id'>");

@@ -39,7 +39,26 @@ public class StudentStatusServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
-	
+	public static boolean checkFinalized(String project_id)
+	{
+		Connection connection=null;
+		boolean res = false;
+		try{
+			connection=getConnection();
+			PreparedStatement pstmt= connection.prepareStatement("select * from applied where project_id=? and status!='Waiting';");
+			pstmt.setString(1, project_id);
+			ResultSet rs= pstmt.executeQuery();
+			while (rs.next()){
+				res=true;
+			}
+			
+		} catch(SQLException sqle){
+			System.out.println("SQL exception when finalizing");
+		} finally{
+			closeConnection(connection);
+		}
+		return res;
+	}
 	static Connection getConnection() {
 		String dbURL = "jdbc:postgresql://10.105.1.12/cs387";
         String dbUser = "db130050076";
@@ -84,7 +103,7 @@ public class StudentStatusServlet extends HttpServlet {
 		return rs;
 	}
 	
-	public static boolean checkPrerequisites(String studentId,String projectID)
+	public static boolean checkPrerequisites(String studentId,String projectID,String prereqtype)
 	{
 		System.out.println("Checking Prerequisites");
 		Connection connection=null;
@@ -92,9 +111,10 @@ public class StudentStatusServlet extends HttpServlet {
 		boolean test=true;
 		try{
 			connection=getConnection();
-			PreparedStatement pstmt= connection.prepareStatement(" select * from prerequisite where prerequisite.project_id=? and prerequisite.type='Hard' and not exists(select * from takes where prerequisite.course_id=takes.course_id and takes.student_id=?);");
+			PreparedStatement pstmt= connection.prepareStatement(" select * from prerequisite where prerequisite.project_id=? and prerequisite.type=? and not exists(select * from takes where prerequisite.course_id=takes.course_id and takes.student_id=?);");
 			pstmt.setString(1, projectID);
-			pstmt.setString(2, studentId);
+			pstmt.setString(2, prereqtype);
+			pstmt.setString(3, studentId);
 			rs= pstmt.executeQuery();
 			while(rs.next())
 			{

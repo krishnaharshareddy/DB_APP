@@ -58,7 +58,7 @@ public class DeleteProjectServlet extends HttpServlet {
 			}
 	        RequestDispatcher rd = getServletContext().getRequestDispatcher("/prof_view.jsp");
             PrintWriter out = response.getWriter();
-            out.println("<font color=red>Deleted Succesfully! .</font>\n");
+            out.println("<font id='USEFORSWAL_DEL' color=red>Deleted Succesfully! .</font>\n");
             rd.include(request, response);
 	 
 	    }

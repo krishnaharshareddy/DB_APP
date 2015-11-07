@@ -5,6 +5,7 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import javax.servlet.RequestDispatcher;
@@ -48,26 +49,36 @@ public class ApplyToProject extends HttpServlet {
 				String sop = request.getParameter("SOP");
 				System.out.println(sop);
 				String project_id = request.getParameter("project_selected");
-				PreparedStatement pstmt1= connection.prepareStatement("insert into applied values(?,?,'Waiting',?);");
-				pstmt1.setString(1,project_id);
-				pstmt1.setString(2,student_id);
-				pstmt1.setString(3,sop);
-				pstmt1.executeUpdate();
-				
-				
+				if(project_id==null)
+				{
+					RequestDispatcher rd = getServletContext().getRequestDispatcher("/student_browse.jsp");
+		            PrintWriter out = response.getWriter();
+		            out.println("<font id= \"USEFORSWAL_ERR\" color=red>Choose a Project! .</font>\n");
+		            rd.include(request, response);
+				}
+				else
+				{
+					PreparedStatement pstmt1= connection.prepareStatement("insert into applied values(?,?,'Waiting',?);");
+					pstmt1.setString(1,project_id);
+					pstmt1.setString(2,student_id);
+					pstmt1.setString(3,sop);
+					pstmt1.executeUpdate();
+					RequestDispatcher rd = getServletContext().getRequestDispatcher("/student_browse.jsp");
+		            PrintWriter out = response.getWriter();
+		            out.println("<font id= \"USEFORSWAL\" color=red>Finalized Succesfully! .</font>\n");
+		            rd.include(request, response);
+				}
 	        } catch(SQLException sqle){
 				System.out.println("SQL exception when inserting project");
 			}
 	        finally{
 				closeConnection(connection);
 			}
-	        RequestDispatcher rd = getServletContext().getRequestDispatcher("/student_browse.jsp");
-            PrintWriter out = response.getWriter();
-            out.println("<font color=red>Finalized Succesfully! .</font>\n");
-            rd.include(request, response);
+	        
 	 
 	    }
 	}
+	
 	static Connection getConnection() {
 		String dbURL = "jdbc:postgresql://10.105.1.12/cs387";
         String dbUser = "db130050076";

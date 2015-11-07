@@ -37,6 +37,9 @@
 		
 
 		</script>
+		<script src="sweetalert-master/dist/sweetalert.min.js"></script> 
+  		<script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="sweetalert-master/dist/sweetalert.css">
 		<noscript>
 			<link rel="stylesheet" href="css/skel.css" />
 			<link rel="stylesheet" href="css/style.css" />
@@ -44,7 +47,14 @@
 		</noscript>
 	</head>
 	<body class="homepage">
-
+			<script>
+				var myElem = document.getElementById('USEFORSWAL_DEL');
+				if (myElem !== null) swal('Deleted Successfully!','Deleted the project from database','success');
+			</script>
+			<script>
+				var myElem = document.getElementById('USEFORSWAL_FAIL');
+				if (myElem !== null) swal('Cannot finalize a list with no one','Please delete the project if you wish to','error');
+			</script>
 			<div id="header-wrapper">
 				<div id="logoseperator">
 				<div id="header" class="container">
@@ -80,7 +90,7 @@
 
 						<!-- Post -->
 							<article class="box post">
-								<div style="width: 60%; float: left">
+								<div style="width: 100%; float: left">
 								<!-- Needs to have which project are published and their corresponding SOP -->
 								<%
 								ResultSet rs=ViewProjectServlet.getProjects(userName);
@@ -106,6 +116,7 @@
 										int student_count=0;
 										out.println("<form action=\"FinalizeProjectServlet\" id=\"usrform\" method=\"post\">");
 										out.println("<input type='hidden' value='"+project_id+"' name='project_id'>");
+										out.println("<table><tr><td><strong>Check</td><td><strong>Name</td><td><strong>Dept.</td><td><strong>CPI</td><td><strong>Status</td><td><strong>Hard Prerequisites</td><td><strong>Soft Prerequisites</td><td><strong>Statement of purpose</td></tr>");
 										while(students.next())
 										{
 											String student_id=students.getString(1);
@@ -117,17 +128,27 @@
 											boolean hard=ViewProjectServlet.checkHard(project_id, student_id);
 											boolean soft=ViewProjectServlet.checkSoft(project_id, student_id);
 											String student_counts=""+student_count;
-											out.println("<input type='hidden'  value='"+student_id+"' name='"+project_id+"_student_id_"+student_counts+"' />");
-											out.println("<input type='checkbox'  value=\"false\" onchange='if(this.checked) this.value=\"true\"; else this.value=\"false\";' name='"+project_id+"_student_marked_"+student_counts+"' />");
-											out.println("<strong>Name: </strong>"+student_name+" "+"<strong>Department: </strong>"+student_department);
-											out.println("<strong>CPI: </strong>"+student_cpi+"<br>"+"<strong>Status: </strong>"+student_status);
-											if(hard) out.println("<strong>Hard Prerequisites: </strong>"+"&#10004");
-											else out.println("<strong>Hard Prerequisites: </strong>"+"&#10008");
-											if(soft) out.println("<strong>Soft Prerequisites: </strong>"+"&#10004 <br>");
-											else out.println("<strong>Soft Prerequisites: </strong>"+"&#10008 <br>");
-											out.println("<a href='#sop_sections' ><input class='myButton' type='myButton'  value='See SOP' onClick=\"displaysop('"+student_sop+"')\"></a> <br> <br>");
-											student_count++;
+											if(student_count<Integer.parseInt(project_total_slots))
+											{
+												out.println("<input type='hidden'  value='"+student_id+"' name='"+project_id+"_student_id_"+student_counts+"' />");
+												out.println("<tr><td><input type='checkbox'  value=\"false\" onchange='if(this.checked) this.value=\"true\"; else this.value=\"false\";' name='"+project_id+"_student_marked_"+student_counts+"' />");
+												out.println("<td>"+student_name+"</td><td>"+student_department);
+												out.println("</td><td>"+student_cpi+"</td><td>"+student_status);
+												if(hard) out.println("</td><td>&#10004");
+												else out.println("</td><td>&#10008");
+												if(soft) out.println("</td><td>&#10004");
+												else out.println("</td><td>"+"&#10008");
+												//out.println("<a href= ><input class='myButton' type='myButton'  value='See SOP' onClick=\"displaysop('"+student_sop+"')\"></a> <br> <br>");
+												out.println("</td><td><a href=\"javascript:swal('"+student_name+"','"+student_sop+"')\"><input class='myButton' type='myButton' value='See SOP'></input></a></td></tr>");
+											}
+											else
+											{
+												out.println("<input type='hidden'  value='"+student_id+"' name='"+project_id+"_student_id_"+student_counts+"' />");
+												out.println("<input style='visibility: hidden;' type='checkbox'  value=\"false\" onchange='if(this.checked) this.value=\"true\"; else this.value=\"false\";' name='"+project_id+"_student_marked_"+student_counts+"' />");
+											}
+												student_count++;
 										}
+										out.println("</table>");
 										out.println("<div style='float: left'>");
 										out.println("<input type='hidden' value='"+student_count+"' name='student_number'>");
 										if(applydate.compareTo(date)<0)
@@ -152,19 +173,7 @@
 								%>
 								</div>
 								
-									<a name="sop_sections" id="sop_sections"></a>
-								<div class="wrapper" style="width: 35%; float: right" >
-								<div id="header-wrapper">
-										<div id="logoseperator">
-										<div id="header" class="container">
-												<h2 align="center"><strong><font size="6em">Statement of Purpose</font></strong></h2>
-										</div>
-										</div>
-									</div>
-									<div id="section">
-										<p id="sop_section">ChandraKanth is black.Black is Chandrkanth. Fuck everyone because chandrakanthso black</p>
-									</div>
-								</div>
+								
 							</article>
 					
 					</div>
